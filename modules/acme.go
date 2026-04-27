@@ -403,8 +403,17 @@ func RenewCert(domain []string, email string, typeString string, siteId string) 
 	}
 	addDomain := ""
 	sslName := domain[0]
+	domainIsValid := true
 	for _, v := range domain {
 		addDomain += " -d " + v
+		// 判断域名是否有效
+		if !validate.IsHost(v) {
+			domainIsValid = false
+			break
+		}
+	}
+	if !domainIsValid {
+		return result, errors.New("域名格式不正确，请检查域名格式")
 	}
 	siteSslPath := types.SslPath + "/" + domain[0]
 	for i := 0; i < 1000; i++ {
