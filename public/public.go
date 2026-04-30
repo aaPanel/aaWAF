@@ -1999,6 +1999,9 @@ func CheckPort(port int) bool {
 }
 
 func AllowPort(port string) error {
+	if CheckPort(StringToInt(port)) {
+		return nil
+	}
 	if FileExists("/usr/sbin/ufw") || FileExists("/usr/ufw") {
 		_, err := Command(fmt.Sprintf("ufw allow %s/tcp && ufw reload", port))
 		if err != nil {
