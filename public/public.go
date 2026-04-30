@@ -2004,9 +2004,11 @@ func AllowPort(port string) error {
 	if err != nil {
 		return errors.New("端口号无效")
 	}
-	if !CheckPort(portInt) {
-		return errors.New("端口已被占用")
+	// 判断端口是否为1-65535
+	if portInt < 1 || portInt > 65535 {
+		return errors.New("端口号必须在1-65535之间")
 	}
+
 	if FileExists("/usr/sbin/ufw") || FileExists("/usr/ufw") {
 		_, err := Command(fmt.Sprintf("ufw allow %s/tcp && ufw reload", port))
 		if err != nil {
