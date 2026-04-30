@@ -1999,8 +1999,13 @@ func CheckPort(port int) bool {
 }
 
 func AllowPort(port string) error {
-	if CheckPort(StringToInt(port)) {
-		return nil
+
+	portInt, err := strconv.Atoi(port)
+	if err != nil {
+		return errors.New("端口号无效")
+	}
+	if !CheckPort(portInt) {
+		return errors.New("端口已被占用")
 	}
 	if FileExists("/usr/sbin/ufw") || FileExists("/usr/ufw") {
 		_, err := Command(fmt.Sprintf("ufw allow %s/tcp && ufw reload", port))
@@ -2008,7 +2013,7 @@ func AllowPort(port string) error {
 			return err
 		}
 	}
-	_, err := Command(fmt.Sprintf("firewall-cmd --permanent --zone=public --add-port=%s/tcp > /dev/null 2>&1 && firewall-cmd --reload", port))
+	_, err = Command(fmt.Sprintf("firewall-cmd --permanent --zone=public --add-port=%s/tcp > /dev/null 2>&1 && firewall-cmd --reload", port))
 	if err != nil {
 		return err
 	}
