@@ -124,6 +124,8 @@ sending 100% |██████████████████████
     - ✅ SnakeYAML反序列化 (2026-04-09 更新 v7.3 <a href="https://github.com/weaweawe01/snakeyaml-ast">已开源 </a> )
     - ✅ XMLDecoder 反序列化(2026-04-28 更新 v7.4 )
     - ✅ Gohst Bits  <a href="https://i.blackhat.com/Asia-26/Presentations/Asia-26-Bai-Cast-Attack-Ghost-Bits-4.23.pdf">Gohst Bits介绍 </a>  - Fastjson 反序列化 (2026-04-28 更新 v7.4 )
+    - ✅ XStream 反序列化(2026-05-07 更新 v7.4 )
+
     
 
 - [2] Java代码注入:
