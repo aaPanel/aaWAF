@@ -349,6 +349,9 @@ func (n *Nginx) UserConfig(request *http.Request) core.Response {
 
 	siteId := public.InterfaceToString(params["site_id"].(interface{}))
 	content := public.InterfaceToString(params["content"].(interface{}))
+	if strings.Contains(content, "init_by_lua") || strings.Contains(content, "init_worker_by_lua") || strings.Contains(content, "ssl_certificate_by_lua") || strings.Contains(content, "set_by_lua") || strings.Contains(content, "rewrite_by_lua") || strings.Contains(content, "access_by_lua") || strings.Contains(content, "content_by_lua") || strings.Contains(content, "header_filter_by_lua") || strings.Contains(content, "body_filter_by_lua") || strings.Contains(content, "log_by_lua") || strings.Contains(content, "balancer_by_lua") || strings.Contains(content, "preread_by_lua") {
+		return core.Fail("用户配置文件中包含非法指令")
+	}
 	siteName, _ := public.GetSiteNameBySiteId(siteId)
 	err = public.ModifyUserConfigInfo(siteId, content)
 	if err != nil {

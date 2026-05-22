@@ -467,9 +467,19 @@ func (s *Wafmastersite) ModifySite(request *http.Request) core.Response {
 		}
 	}
 	if modifyType == "modifyUserIncludeText" && modifySiteJson.Server.UserIncludeText != "" {
+		var content string
+		content = modifySiteJson.Server.UserIncludeText
+		if strings.Contains(content, "init_by_lua") || strings.Contains(content, "init_worker_by_lua") || strings.Contains(content, "ssl_certificate_by_lua") || strings.Contains(content, "set_by_lua") || strings.Contains(content, "rewrite_by_lua") || strings.Contains(content, "access_by_lua") || strings.Contains(content, "content_by_lua") || strings.Contains(content, "header_filter_by_lua") || strings.Contains(content, "body_filter_by_lua") || strings.Contains(content, "log_by_lua") || strings.Contains(content, "balancer_by_lua") || strings.Contains(content, "preread_by_lua") {
+			return core.Fail("自定义header头中包含非法指令")
+		}
 		sourceSiteJson.Server.UserIncludeText = modifySiteJson.Server.UserIncludeText
 	}
 	if modifyType == "modifyUserIncludeHeaderText" && modifySiteJson.Server.UserIncludeHeaderText != "" {
+		var content string
+		content = modifySiteJson.Server.UserIncludeHeaderText
+		if strings.Contains(content, "init_by_lua") || strings.Contains(content, "init_worker_by_lua") || strings.Contains(content, "ssl_certificate_by_lua") || strings.Contains(content, "set_by_lua") || strings.Contains(content, "rewrite_by_lua") || strings.Contains(content, "access_by_lua") || strings.Contains(content, "content_by_lua") || strings.Contains(content, "header_filter_by_lua") || strings.Contains(content, "body_filter_by_lua") || strings.Contains(content, "log_by_lua") || strings.Contains(content, "balancer_by_lua") || strings.Contains(content, "preread_by_lua") {
+			return core.Fail("自定义header头中包含非法指令")
+		}
 		sourceSiteJson.Server.UserIncludeHeaderText = modifySiteJson.Server.UserIncludeHeaderText
 	}
 
