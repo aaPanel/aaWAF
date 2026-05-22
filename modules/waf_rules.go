@@ -821,6 +821,12 @@ func (w *Wafrules) GetSpiderRules(request *http.Request) core.Response {
 	if spider_type == "" {
 		return core.Fail("参数错误")
 	}
+	// 判断spider_type是否在100 以内
+	spiderTypeInt := public.InterfaceToInt(params["spider_type"].(interface{}))
+	if spiderTypeInt < 1 || spiderTypeInt > 100 {
+		return core.Fail("参数错误")
+	}
+
 	rule_path := WafPath + "/inc/" + params["spider_type"].(string) + ".json"
 
 	jsonData, err := public.ReadInterfaceFileBytes(rule_path)

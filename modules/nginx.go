@@ -1455,6 +1455,26 @@ func (n *Nginx) DownloadLog(request *http.Request) core.Response {
 	}
 
 	dir_path := core.AbsPath("/www/cloud_waf/vhost/history_backups/logs/") + params.SiteId + "/" + params.Types + "_log/"
+
+	// 遍历dir_path目录，找到对应的文件 params.FileName，并返回绝对路径
+	if !public.FileExists(dir_path) {
+		return core.Fail("文件不存在")
+	}
+	files, err := os.ReadDir(dir_path)
+	if err != nil {
+		return core.Fail(err)
+	}
+	var flag = false
+	for _, file := range files {
+		if file.Name() == params.FileName {
+			flag = true
+			break
+		}
+	}
+	if !flag {
+		return core.Fail("文件不存在")
+	}
+
 	file_name := dir_path + params.FileName
 	if params.Download == 1 {
 		response, err := core.DownloadFile(file_name, params.FileName)
