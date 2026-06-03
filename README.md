@@ -230,6 +230,34 @@ bash install_cloudwaf.sh offline
 <img width="239" alt="image" src="https://bt-1251050919.cos.ap-guangzhou.myqcloud.com/btwafGroup.png?a=5">
 
 
+# SSE 配置
+## 如果您网站中需要设置SSE 可以参考如下的配置 
+```
+location ^~ /chat/openai/ {
+    proxy_pass http://192.168.10.1;
+    proxy_http_version 1.1;
+    proxy_read_timeout 600s;
+    proxy_send_timeout 600s;
+    proxy_connect_timeout 60s;
+    proxy_ignore_client_abort off;    # 明确设置（虽是默认，但写上更保险）
+    proxy_request_buffering off;      # 可选：进一步确保不缓冲请求体
+    proxy_buffering off;
+    proxy_cache off;
+    chunked_transfer_encoding on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+    proxy_pass_request_headers on;
+}
+
+```
+
 
 
 ##  开源的引擎
