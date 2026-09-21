@@ -113,7 +113,7 @@ __URL__: /api/limit/get_ip<br/>
 __METHOD__: POST<br/>
 __Request__: 
 ```json
-{p: 1, types: 1, p_size: 10, keyword: ""} 
+{p: 1, types: 0, p_size: 10, keyword: ""}
 ```
 
 
