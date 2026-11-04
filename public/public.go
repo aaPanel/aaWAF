@@ -129,7 +129,8 @@ func ipSearchNew() (ipSearch, error) {
 		ips, err = loadIpDat()
 		if err != nil {
 			logging.Error("the IP Dat loaded failed!")
-			return *ips, err
+			// 缺少 IP 库时不解引用 nil，按查不到处理
+			return ipSearch{}, err
 		}
 	}
 	return *ips, nil

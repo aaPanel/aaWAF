@@ -1310,7 +1310,8 @@ func (n *Nginx) DelTcpLoadBalance(request *http.Request) core.Response {
 
 func (n *Nginx) GetTcpLoadBalance(request *http.Request) core.Response {
 	if !public.FileExists(public.NginxJsonPath + "/nginx.json") {
-		return core.Success(nil)
+		// 没配置过端口转发时返回空列表，前端会解构 tcp_load_balance
+		return core.Success(map[string]any{"tcp_load_balance": map[string]any{}})
 	}
 	loadBalanceContent, err := public.ReadMapStringInterfaceFile((public.NginxJsonPath + "/nginx.json"))
 	if err != nil {

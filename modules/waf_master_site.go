@@ -4244,6 +4244,10 @@ func SyncRenewalCertSite(siteId string) {
 	if SiteJson.Server.Ssl.SslType != "Let's Encrypt" {
 		return
 	}
+	// DNS API 申请的证书由 RenewDnsApiCerts 统一续签
+	if IsDnsApiType(SiteJson.Server.Ssl.ApplyType) || siteDnsApiSslName(siteId) != "" {
+		return
+	}
 	SslDay := SiteJson.Server.Ssl.NotAfter.Unix() - time.Now().Unix()
 	Day := SslDay / 86400
 	if Day < 20 {
@@ -4285,6 +4289,7 @@ func SyncRenewalCertSite(siteId string) {
 @name 每天2点或者3点随机时间执行 续签SSL
 */
 func SyncRenewalCert() {
+	_, _ = RenewDnsApiCerts("", false)
 	SiteList, err := public.M("site_info").Field([]string{"site_id"}).Select()
 	if err != nil {
 		return
