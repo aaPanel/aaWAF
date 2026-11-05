@@ -129,7 +129,8 @@ func ipSearchNew() (ipSearch, error) {
 		ips, err = loadIpDat()
 		if err != nil {
 			logging.Error("the IP Dat loaded failed!")
-			return *ips, err
+			// 缺少 IP 库时不解引用 nil，按查不到处理
+			return ipSearch{}, err
 		}
 	}
 	return *ips, nil
@@ -137,7 +138,12 @@ func ipSearchNew() (ipSearch, error) {
 
 func loadIpDat() (*ipSearch, error) {
 	p := ipSearch{}
-	reader, err := mmdbinspect.OpenDB("/www/cloud_waf/console/data/Bt-GeoLite2-City.mmdb")
+	// 新版安装包不再提供 console/data 下的 IP 库，改用 WAF 规则目录里的同格式文件
+	path := "/www/cloud_waf/console/data/Bt-GeoLite2-City.mmdb"
+	if !FileExists(path) {
+		path = "/www/cloud_waf/nginx/conf.d/waf/inc/GeoLite2-City.mmdb"
+	}
+	reader, err := mmdbinspect.OpenDB(path)
 	if err != nil {
 		logging.Error("the IP Dat loaded failed!")
 		return nil, err

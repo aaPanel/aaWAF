@@ -45,6 +45,13 @@ func (as *Acmesh) ApplyCert(request *http.Request) core.Response {
 	if err != nil {
 		return core.Fail("安装acme失败:" + err.Error())
 	}
+	if IsDnsApiType(params.Types) {
+		result, err := ApplyCertDnsApi(params.Domain, params.Types, []string{params.SiteId})
+		if err != nil {
+			return core.Fail(joinErr(result, err))
+		}
+		return core.Success(result)
+	}
 	result, err := ApplyCert(params.Domain, params.Types, GetSslEmail(), params.SiteId)
 	if err != nil {
 		return core.Fail(err)
@@ -169,6 +176,14 @@ func RenewalCert(siteId string) (string, error) {
 	}
 	if SiteJson.Server.Ssl == nil || SiteJson.Server.Ssl.IsSsl == 0 {
 		return "", errors.New("该网站未开启SSL 无法续签")
+	}
+	// DNS API 申请的证书直接续签，不需要关闭强制HTTPS
+	if sslName := siteDnsApiSslName(SiteJson.SiteID); sslName != "" {
+		result, err := RenewDnsApiCerts(sslName, true)
+		if err != nil {
+			return "", errors.New(strings.Join(result, "</br>"))
+		}
+		return strings.Join(result, "</br>"), nil
 	}
 	if SiteJson.Server.Ssl.IsSsl == 1 {
 		if SiteJson.Server.Ssl.ForceHttps == 1 {
